@@ -1,8 +1,11 @@
 package Prometheus.Systems;
 
-import Prometheus.Characters.Ancestry;
+
 import Prometheus.Characters.Character;
+import Prometheus.Characters.Equipment;
+import Prometheus.Characters.Inventory;
 import Prometheus.Characters.Player;
+import Prometheus.Items.Armor;
 import Prometheus.Story.ActOne;
 
 import java.util.Objects;
@@ -59,13 +62,15 @@ public class GameLogic {
 
         //create player character
         Player player = createCharacter();
+        Inventory backpack = player.setupInventory();
+        Equipment playerEquip = new Equipment();
+        Equipment.equipmentInit();
+
+
         int[] ancestryArray = setAncestryArray(player);
         starterStats(player.getStats(), setAncestryArray(player));
-        printSeparator(35);
-        printSeparator(30);
-        System.out.println("Name: " + player.getName());
-        System.out.println("Ancestry: " + player.getAncestry());
-        System.out.println("Age: " + player.getAge());
+        player.setStatModifiers(player.getStats());
+
         printSeparator(40);
         System.out.println("|Stat Name|...|Rank|...|Ancestry Modifier|");
         printSeparator(40);
@@ -75,8 +80,30 @@ public class GameLogic {
         System.out.println("Intelligence:  " + player.getStats()[3] + "       [" + ancestryArray[3] + "]");
         System.out.println("Wisdom:        " + player.getStats()[4] + "       [" + ancestryArray[4] + "]");
         System.out.println("Charisma:      " + player.getStats()[5] + "       [" + ancestryArray[5] + "]");
+        printSeparator(40);
+
+        System.out.println("\nGiven these stats, what class are you?");
+        String choice = checkStringChoice("(Cleric/Fighter/Rogue/Wizard)", classes);
+        if(choice.trim().equalsIgnoreCase("Cleric")){
+            player.setCharacterClass("Cleric");
+            player.setCleric(player.getStats());
+        }else if(choice.trim().equalsIgnoreCase("Fighter")){
+            player.setCharacterClass("Fighter");
+            player.setFighter(player.getStats());
+        }else if(choice.trim().equalsIgnoreCase("Rogue")){
+            player.setCharacterClass("Rogue");
+            player.setRogue(player.getStats());
+        }else if(choice.trim().equalsIgnoreCase("Wizard")){
+            player.setCharacterClass("Wizard");
+            player.setWizard(player.getStats());
+        }
 
         //print campfire
+        ActOne.printCampsite(backpack);
+
+        player.printCharacterSheet(playerEquip);
+        Inventory.printInventory(backpack.getInventory());
+        System.out.println();
 
         //print dungeonStart
 
@@ -87,19 +114,19 @@ public class GameLogic {
 //------ create player character
     static String[] getStatName = {"Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma"};
     static String[] ancestries = {"dwarf", "elf", "human", "orc"};
+    static String[] classes = {"Cleric", "Fighter", "Rogue", "Wizard"};
 
 
     public static Player createCharacter() {
         //greeting
         clearConsole();
-
         System.out.println("What is your name?");
         String name = scanner.nextLine();
         printSeparator(30);
 
         clearConsole();
         System.out.println("What's your ancestry?");
-        String ancestry = checkStringChoice("(dwarf/elf/human/orc)", ancestries);
+        String ancestry = checkStringChoice("(Dwarf/Elf/Human/Orc)", ancestries);
 
         clearConsole();
         int age = checkInt("How old are you?");
@@ -187,15 +214,20 @@ public class GameLogic {
 
     //set ancestry array
     public static int[] setAncestryArray(Character player){
-        if(Objects.equals(player.getAncestry(), "dwarf")){
+
+        if (Objects.equals(player.getAncestry(), "dwarf")) {
             return dwarfStats;
-        } else if (Objects.equals(player.getAncestry(), "elf")){
+
+        } else if (Objects.equals(player.getAncestry(), "elf")) {
             return elfStats;
-        } else if (Objects.equals(player.getAncestry(), "human")){
+
+        } else if (Objects.equals(player.getAncestry(), "human")) {
             return humanStats;
+
         } else {
             return orcStats;
         }
+
     }
 
     //change stats based on ancestry
@@ -206,6 +238,10 @@ public class GameLogic {
             i++;
         }
     }
+
+
+
+    //class and derived stats methods
 
 //------ end of character creation-------
 
@@ -301,6 +337,12 @@ public class GameLogic {
     public static void anythingToContinue(){
         System.out.println("\nPress 'enter' to continue...");
         scanner.nextLine();
+    }
+
+    //round down half
+    public static int roundDown(int n){
+        double num = n;
+        return (int)Math.floor(num/2);
     }
 
 

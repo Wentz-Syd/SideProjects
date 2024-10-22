@@ -4,6 +4,12 @@ import java.util.Random;
 
 public class Dice {
 
+    //generic
+    public static int roll(int dieType){
+        Random random = new Random();
+        return random.nextInt(dieType)+1;
+    }
+
     //d2
     public static int d2(int numberOfDice){
         int total=0;

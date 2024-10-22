@@ -7,7 +7,6 @@ public class Character {
     //parameters
     private String name;
     private String ancestry;
-//    private String characterClass;
     private int age;
 //    private String alignment;
     private int[] stats = new int[6];
@@ -40,14 +39,6 @@ public class Character {
     public void setAncestry(String ancestry) {
         this.ancestry = ancestry;
     }
-
-//    public String getCharacterClass() {
-//        return characterClass;
-//    }
-//
-//    public void setCharacterClass(String characterClass) {
-//        this.characterClass = characterClass;
-//    }
 
     public int getAge() {
         return age;
