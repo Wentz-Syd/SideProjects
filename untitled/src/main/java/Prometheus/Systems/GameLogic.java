@@ -11,6 +11,7 @@ import Prometheus.Story.ActOne;
 import java.util.Objects;
 import java.util.Scanner;
 import static Prometheus.Characters.Ancestry.*;
+import static Prometheus.Combat.Combat.combatStart;
 
 public class GameLogic {
 
@@ -27,15 +28,15 @@ public class GameLogic {
         howTo();
         anythingToContinue();
 
-        clearConsole();
-        printSeparator(40);
-        printSeparator(30);
-        System.out.println("***Project: PROMETHEUS***");
-        System.out.println("     **a test rpg**");
-        System.out.println("        *by Syd*");
-        printSeparator(30);
-        printSeparator(40);
-        anythingToContinue();
+//        clearConsole();
+//        printSeparator(40);
+//        printSeparator(30);
+//        System.out.println("***Project: PROMETHEUS***");                //removed for testing speed
+//        System.out.println("     **a test rpg**");
+//        System.out.println("        *by Syd*");
+//        printSeparator(30);
+//        printSeparator(40);
+//        anythingToContinue();
 
         //roll luck stat and say ominous shit
         clearConsole();
@@ -58,7 +59,7 @@ public class GameLogic {
         anythingToContinue();
 
         //print intro
-        ActOne.printIntro();
+//        ActOne.printIntro();                   //removed for testing speed
 
         //create player character
         Player player = createCharacter();
@@ -99,11 +100,14 @@ public class GameLogic {
         }
 
         //print campfire
-        ActOne.printCampsite(backpack);
+//        ActOne.printCampsite(backpack);              //removed for testing speed
 
         player.printCharacterSheet(playerEquip);
         Inventory.printInventory(backpack.getInventory());
-        System.out.println();
+        System.out.println("\n\n\n");
+
+        Encounters.setupEnemyEncounters();
+        combatStart(player, playerEquip, Encounters.chooseEnemy(Encounters.getEnemyEncounters()));
 
         //print dungeonStart
 
@@ -115,6 +119,7 @@ public class GameLogic {
     static String[] getStatName = {"Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma"};
     static String[] ancestries = {"dwarf", "elf", "human", "orc"};
     static String[] classes = {"Cleric", "Fighter", "Rogue", "Wizard"};
+    static String[] handed = {"Right", "Left"};
 
 
     public static Player createCharacter() {
@@ -131,12 +136,22 @@ public class GameLogic {
         clearConsole();
         int age = checkInt("How old are you?");
 
+        clearConsole();
+        System.out.println("What is your dominant hand?");
+        String dominantHand = checkStringChoice("Right/Left", handed);
+        String otherHand;
+        if(dominantHand.equalsIgnoreCase("Right")){
+            otherHand = "Left";
+        }else{
+            otherHand = "Right";
+        }
+
         printSeparator(30);
         System.out.println("~~set your stats~~");
         int[] stats = assignStats();
 
         clearConsole();
-        return new Player(name, ancestry, age, stats);
+        return new Player(name, ancestry, age, stats, dominantHand, otherHand);
     }
 
 
@@ -331,6 +346,18 @@ public class GameLogic {
             }
         }
         return false;
+    }
+
+    //menu item selection
+    public static int promptForMenuSelection() {
+        int menuSelection;
+        System.out.print("Please choose an option: ");
+        try {
+            menuSelection = Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            menuSelection = -1;
+        }
+        return menuSelection;
     }
 
     //wait for input

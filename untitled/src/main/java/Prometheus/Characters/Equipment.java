@@ -2,6 +2,7 @@ package Prometheus.Characters;
 
 import Prometheus.Items.Armor;
 import Prometheus.Items.Item;
+import Prometheus.Items.Weapon;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -10,7 +11,10 @@ public class Equipment {
 
     //params
     int AcBonus;
-    static Map<String, Armor> equipmentSlots = new LinkedHashMap<>();
+    public static Map<String, Armor> equipmentSlots = new LinkedHashMap<>();
+    static Weapon emptyHand = new Weapon("Fist",1, 4,1, "Unarmed");
+
+    static Map<String, Weapon> equippedWeapons = new LinkedHashMap<>();
     static Armor empty = new Armor("-empty-",1,0,"placeholder");
 
     //G&S
@@ -18,7 +22,19 @@ public class Equipment {
         AcBonus = calcAC(equipmentSlots);
         return AcBonus;
     }
-//    public void setAcBonus(int acBonus) {
+
+    public static Map<String, Armor> getEquipmentSlots() {
+        return equipmentSlots;
+    }
+    public static Map<String, Weapon> getEquippedWeapons() {
+        return equippedWeapons;
+    }
+
+    public static Weapon getEquippedWeapon(String hand){
+        return equippedWeapons.get(hand);
+    }
+
+    //    public void setAcBonus(int acBonus) {
 //        AcBonus = acBonus;
 //    }
 
@@ -47,12 +63,18 @@ public class Equipment {
         equipmentSlots.put("Shield", empty);
         equipmentSlots.put("Ring", empty);
     }
-
-    //equip an item
-    public static void equipItem(String bodySlot, Armor armorName){
-        equipmentSlots.put(bodySlot, armorName);
+    public static void weaponsInit(){
+        equippedWeapons.put("Right", emptyHand );
+        equippedWeapons.put("Left", emptyHand);
     }
 
+    //equip an item
+    public static void equipArmor(String bodySlot, Armor armorName){
+        equipmentSlots.put(bodySlot, armorName);
+    }
+    public static void equipWeapon(String hand, Weapon weaponName){
+        equippedWeapons.put(hand,weaponName);
+    }
 
 
 

@@ -10,6 +10,7 @@ public class Enemy {
     //params
     private String name;
     private int maxHP;
+    private int currentHP;
     private int ac;
     private int saveFort;
     private int saveRef;
@@ -29,6 +30,7 @@ public class Enemy {
     public Enemy(String name, int maxHP, int ac, int saveFort, int saveRef, int saveWill, int atkBonus, List<Attack> attacks) {
         this.name = name;
         this.maxHP = maxHP;
+        this.currentHP = maxHP;
         this.saveFort = saveFort;
         this.saveRef = saveRef;
         this.saveWill = saveWill;
@@ -51,6 +53,13 @@ public class Enemy {
     }
     public void setMaxHP(int maxHP) {
         this.maxHP = maxHP;
+    }
+
+    public int getCurrentHP() {
+        return currentHP;
+    }
+    public void setCurrentHP(int currentHP) {
+        this.currentHP = currentHP;
     }
 
     public int getAc() {
@@ -104,10 +113,14 @@ public class Enemy {
 
 
     //methods
-    public Attack getRandomAttack(){
+    public Attack getRandomAttack(List<Attack> attacks){
+        int min = 0;
+        int max = attacks.size();
         Random random = new Random();
-        return attacks.get(random.nextInt());
+        return attacks.get(random.nextInt(min,max));
     }
 
-
+//    public int basicEnemyAttack(Attack attack){
+//        return getAtkBonus()+attack.getDamage();
+//    }
 }
