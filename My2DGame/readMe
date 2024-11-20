@@ -1,0 +1,8 @@
+this is a very short and simple 2D game I coded based on a tutorial by RyiSnow on youtube.
+It is in the vein of a super nintendo Zelda or similar title.
+
+In this I had to use jPanel to create a window to play the game within as well as design
+a collision system for entities rendered on screen. This was done by referencing x and y coordinates of the world (total area) vs the entity collision space, or 'solidArea'
+
+Game art was drawn in a tile format. The world map is rendered using txt files to generate maps.
+I also created the music using a software called beepBox.
